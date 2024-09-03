@@ -1,12 +1,11 @@
 import { useConnect, useAccount, useDisconnect } from "wagmi";
+import { Button, Grid, Typography } from "../../components";
 // import { useAutoConnect } from "../../hooks/useAutoConnect";
 
 export function Web3ConnectButton() {
   const { connect, connectors, error } = useConnect();
   const { isConnecting, isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-
-  // useAutoConnect();
 
   const handleClick = () => {
     if (isConnected) {
@@ -26,13 +25,15 @@ export function Web3ConnectButton() {
     : "Connect to Sepolia";
 
   return (
-    <div>
-      <button onClick={handleClick} disabled={isConnecting}>
+    <Grid>
+      <Button onClick={handleClick} disabled={isConnecting}>
         {buttonText}
-      </button>
+      </Button>
       {error && (
-        <div style={{ color: "red", marginTop: "10px" }}>{error.message}</div>
+        <Grid>
+          <Typography>Something went wrong</Typography>
+        </Grid>
       )}
-    </div>
+    </Grid>
   );
 }

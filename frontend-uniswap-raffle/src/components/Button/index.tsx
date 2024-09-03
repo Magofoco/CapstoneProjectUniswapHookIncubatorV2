@@ -20,6 +20,10 @@ const StyledButton = styled(MuiButton)({
   },
 });
 
-export const Button: React.FC<ButtonProps> = ({ children }) => {
-  return <StyledButton variant="contained">{children}</StyledButton>;
+export const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
+  return (
+    <StyledButton variant="contained" {...props}>
+      {children}
+    </StyledButton>
+  );
 };
