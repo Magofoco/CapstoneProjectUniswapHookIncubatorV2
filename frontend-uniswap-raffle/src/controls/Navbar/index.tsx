@@ -1,6 +1,7 @@
 import React from "react";
 import { Toolbar, Typography } from "@mui/material";
-import { Button, AppBar } from "../../components";
+import { AppBar } from "../../components";
+import { Web3ConnectButton } from "../Web3ConnectButton";
 
 export const Navbar: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ export const Navbar: React.FC = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           RaffleShuffle
         </Typography>
-        <Button>Connect wallet</Button>
+        <Web3ConnectButton />
       </Toolbar>
     </AppBar>
   );
