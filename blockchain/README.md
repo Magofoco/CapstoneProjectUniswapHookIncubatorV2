@@ -1,13 +1,18 @@
-# Sample Hardhat Project
+# Installing Uniswap forge project into local hardhat project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+1. Install foundry https://book.getfoundry.sh/getting-started/installation 
+2. Install dependencies:
+```
+npm i
+```
 
-Try running some of the following tasks:
+3. Clone Uniswap/v4-periphery
+```
+git clone https://github.com/Uniswap/v4-periphery.git lib/v4-periphery
+```
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
+4. Install Uniswap/v4-periphery dependencies.
+```
+cd lib/v4-periphery
+forge install
 ```
