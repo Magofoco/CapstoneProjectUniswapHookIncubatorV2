@@ -1,0 +1,6 @@
+.env
+node_modules
+modules.json/
+lib/
+cache/
+typechain-types/
