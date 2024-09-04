@@ -12,3 +12,4 @@ export { TableContainer } from "./TableContainer";
 export { TableHead } from "./TableHead";
 export { TableRow } from "./TableRow";
 export { Box } from "./Box";
+export { Link } from "./Link";
