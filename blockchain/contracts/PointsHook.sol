@@ -71,7 +71,7 @@ contract PointsHook is BaseHook, ERC20 {
         IPoolManager.SwapParams calldata swapParams,
         BalanceDelta delta,
         bytes calldata hookData
-    ) external override onlyByPoolManager returns (bytes4, int128) {
+    ) external override onlyPoolManager returns (bytes4, int128) {
         // If this is not an ETH-TOKEN pool with this hook attached, ignore
         if (!key.currency0.isNative()) return (this.afterSwap.selector, 0);
 
@@ -105,7 +105,7 @@ contract PointsHook is BaseHook, ERC20 {
         IPoolManager.ModifyLiquidityParams calldata,
         BalanceDelta delta,
         bytes calldata hookData
-    ) external override onlyByPoolManager returns (bytes4, BalanceDelta) {
+    ) external override onlyPoolManager returns (bytes4, BalanceDelta) {
         // If this is not an ETH-TOKEN pool with this hook attached, ignore
         if (!key.currency0.isNative()) return (this.afterSwap.selector, delta);
 

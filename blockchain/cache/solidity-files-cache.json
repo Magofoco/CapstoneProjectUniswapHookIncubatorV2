@@ -1,10 +1,646 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/francescostefani/Desktop/uniswap-raffle-hook/contracts/Lock.sol": {
-      "lastModificationDate": 1724848292908,
-      "contentHash": "dacf0d5cb5b45dc83086de5bc1c26c2c",
-      "sourceName": "contracts/Lock.sol",
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/contracts/PointsHook.sol": {
+      "lastModificationDate": 1725481852294,
+      "contentHash": "e020abbe42a451f008cfe595299c03fd",
+      "sourceName": "contracts/PointsHook.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../lib/v4-periphery/src/base/hooks/BaseHook.sol",
+        "@uniswap/v4-core/lib/solmate/src/tokens/ERC20.sol",
+        "@uniswap/v4-core/src/interfaces/IPoolManager.sol",
+        "@uniswap/v4-core/src/types/Currency.sol",
+        "@uniswap/v4-core/src/types/BalanceDelta.sol",
+        "@uniswap/v4-core/src/types/PoolKey.sol",
+        "@uniswap/v4-core/src/libraries/Hooks.sol"
+      ],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "PointsHook"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/src/base/hooks/BaseHook.sol": {
+      "lastModificationDate": 1725481769155,
+      "contentHash": "cd312501cef61539bd28e0f243d9e30e",
+      "sourceName": "lib/v4-periphery/src/base/hooks/BaseHook.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@uniswap/v4-core/src/libraries/Hooks.sol",
+        "@uniswap/v4-core/src/interfaces/IPoolManager.sol",
+        "@uniswap/v4-core/src/interfaces/IHooks.sol",
+        "@uniswap/v4-core/src/types/BalanceDelta.sol",
+        "@uniswap/v4-core/src/types/PoolKey.sol",
+        "@uniswap/v4-core/src/types/BeforeSwapDelta.sol",
+        "../SafeCallback.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BaseHook"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/types/Currency.sol": {
+      "lastModificationDate": 1725481801028,
+      "contentHash": "1b5e565336fb4a9970a4f060153e6d6d",
+      "sourceName": "@uniswap/v4-core/src/types/Currency.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../interfaces/external/IERC20Minimal.sol",
+        "../libraries/CustomRevert.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "CurrencyLibrary"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/types/BalanceDelta.sol": {
+      "lastModificationDate": 1725481801025,
+      "contentHash": "dec730cf97f8429624545ffff69e7909",
+      "sourceName": "@uniswap/v4-core/src/types/BalanceDelta.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../libraries/SafeCast.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BalanceDeltaLibrary"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/libraries/Hooks.sol": {
+      "lastModificationDate": 1725481800933,
+      "contentHash": "f76f35bf83f8ddcd377ba797913bc7dd",
+      "sourceName": "@uniswap/v4-core/src/libraries/Hooks.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../types/PoolKey.sol",
+        "../interfaces/IHooks.sol",
+        "./SafeCast.sol",
+        "./LPFeeLibrary.sol",
+        "../types/BalanceDelta.sol",
+        "../types/BeforeSwapDelta.sol",
+        "../interfaces/IPoolManager.sol",
+        "./ParseBytes.sol",
+        "./CustomRevert.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Hooks"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IPoolManager.sol": {
+      "lastModificationDate": 1725481800904,
+      "contentHash": "b22281f34dbd6d07e2502ee05ab2ecc4",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IPoolManager.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../types/Currency.sol",
+        "../types/PoolKey.sol",
+        "./IHooks.sol",
+        "./external/IERC6909Claims.sol",
+        "./IProtocolFees.sol",
+        "../types/BalanceDelta.sol",
+        "../types/PoolId.sol",
+        "./IExtsload.sol",
+        "./IExttload.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "IPoolManager"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/types/PoolKey.sol": {
+      "lastModificationDate": 1725481801031,
+      "contentHash": "f6873c25d1f291e820594159186e7056",
+      "sourceName": "@uniswap/v4-core/src/types/PoolKey.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Currency.sol",
+        "../interfaces/IHooks.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": []
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/lib/solmate/src/tokens/ERC20.sol": {
+      "lastModificationDate": 1725481809031,
+      "contentHash": "0c7c7ada139062536af09d69d96d395c",
+      "sourceName": "@uniswap/v4-core/lib/solmate/src/tokens/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/src/base/SafeCallback.sol": {
+      "lastModificationDate": 1725481769151,
+      "contentHash": "79426ced20241d30621688d59d2c580b",
+      "sourceName": "lib/v4-periphery/src/base/SafeCallback.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@uniswap/v4-core/src/interfaces/callback/IUnlockCallback.sol",
+        "@uniswap/v4-core/src/interfaces/IPoolManager.sol",
+        "./ImmutableState.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeCallback"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IHooks.sol": {
+      "lastModificationDate": 1725481800902,
+      "contentHash": "98abb189512ad8d9d8439237d6d3a2cb",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IHooks.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../types/PoolKey.sol",
+        "../types/BalanceDelta.sol",
+        "./IPoolManager.sol",
+        "../types/BeforeSwapDelta.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IHooks"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/types/BeforeSwapDelta.sol": {
+      "lastModificationDate": 1725481801027,
+      "contentHash": "ae7541dc512b8b3131e5ef904f047a72",
+      "sourceName": "@uniswap/v4-core/src/types/BeforeSwapDelta.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BeforeSwapDeltaLibrary"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/src/base/ImmutableState.sol": {
+      "lastModificationDate": 1725481769143,
+      "contentHash": "7683f66c2ac9ea1e3dd4847e7a5bc213",
+      "sourceName": "lib/v4-periphery/src/base/ImmutableState.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@uniswap/v4-core/src/interfaces/IPoolManager.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ImmutableState"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/callback/IUnlockCallback.sol": {
+      "lastModificationDate": 1725481800910,
+      "contentHash": "43f66660291be4d6aad9bdcc895462ba",
+      "sourceName": "@uniswap/v4-core/src/interfaces/callback/IUnlockCallback.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IUnlockCallback"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/types/PoolId.sol": {
+      "lastModificationDate": 1725481801029,
+      "contentHash": "48d4c8c5f1df413a01325a2fb4b89877",
+      "sourceName": "@uniswap/v4-core/src/types/PoolId.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./PoolKey.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PoolIdLibrary"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IExtsload.sol": {
+      "lastModificationDate": 1725481800898,
+      "contentHash": "d6736ed46cbb3b677519964ffea3ce9c",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IExtsload.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IExtsload"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IProtocolFees.sol": {
+      "lastModificationDate": 1725481800908,
+      "contentHash": "8426a5561cce49a245f4a5c8461fe07b",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IProtocolFees.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../types/Currency.sol",
+        "../interfaces/IProtocolFeeController.sol",
+        "../types/PoolId.sol",
+        "../types/PoolKey.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "IProtocolFees"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IExttload.sol": {
+      "lastModificationDate": 1725481800901,
+      "contentHash": "c565abf89714dff14e9d67c9d72d028b",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IExttload.sol",
       "solcConfig": {
         "version": "0.8.24",
         "settings": {
@@ -34,7 +670,303 @@
         "^0.8.24"
       ],
       "artifacts": [
-        "Lock"
+        "IExttload"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/external/IERC6909Claims.sol": {
+      "lastModificationDate": 1725481800917,
+      "contentHash": "4fc5d7c51f35f6a84ebffdfb9015a66d",
+      "sourceName": "@uniswap/v4-core/src/interfaces/external/IERC6909Claims.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC6909Claims"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/libraries/CustomRevert.sol": {
+      "lastModificationDate": 1725481800925,
+      "contentHash": "b0ad3cdccdf6902a8fdc1fe2d63c48fb",
+      "sourceName": "@uniswap/v4-core/src/libraries/CustomRevert.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "CustomRevert"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/external/IERC20Minimal.sol": {
+      "lastModificationDate": 1725481800914,
+      "contentHash": "a69206056cce1f676fd4b64f7aed1b66",
+      "sourceName": "@uniswap/v4-core/src/interfaces/external/IERC20Minimal.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Minimal"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/libraries/SafeCast.sol": {
+      "lastModificationDate": 1725481800947,
+      "contentHash": "81269c9ca87cf9b8661b7a29c706bb65",
+      "sourceName": "@uniswap/v4-core/src/libraries/SafeCast.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./CustomRevert.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeCast"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/interfaces/IProtocolFeeController.sol": {
+      "lastModificationDate": 1725481800906,
+      "contentHash": "bb21f890367a37fcd36c6f27ea943d9d",
+      "sourceName": "@uniswap/v4-core/src/interfaces/IProtocolFeeController.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../types/PoolKey.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IProtocolFeeController"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/libraries/ParseBytes.sol": {
+      "lastModificationDate": 1725481800942,
+      "contentHash": "e24a98ada27fbf4f47dcf572070c69f1",
+      "sourceName": "@uniswap/v4-core/src/libraries/ParseBytes.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ParseBytes"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/lib/v4-periphery/lib/v4-core/src/libraries/LPFeeLibrary.sol": {
+      "lastModificationDate": 1725481800934,
+      "contentHash": "37173ce396fbe5a19b17e265a152a86b",
+      "sourceName": "@uniswap/v4-core/src/libraries/LPFeeLibrary.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./CustomRevert.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "LPFeeLibrary"
+      ]
+    },
+    "/Users/francescostefani/Desktop/CapstoneProjectUniswapHookIncubatorV2/blockchain/contracts/test/MockToken.sol": {
+      "lastModificationDate": 1725480883372,
+      "contentHash": "9133e9d245d43b9a99d31dba4f5c54c0",
+      "sourceName": "contracts/test/MockToken.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@uniswap/v4-core/lib/solmate/src/tokens/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "MockToken"
       ]
     }
   }
