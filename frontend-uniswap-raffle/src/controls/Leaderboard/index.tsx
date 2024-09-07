@@ -16,6 +16,8 @@ export interface LeaderboardEntry {
   amount: number;
   ticker: string;
   date: string;
+  poolType: string;
+  // Removed: ticketsOwned: number;
 }
 
 export interface LeaderboardProps {
@@ -23,6 +25,8 @@ export interface LeaderboardProps {
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
+  // Removed: const navigate = useNavigate();
+
   return (
     <TableContainer component={Paper}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -38,6 +42,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
             <TableCell variant="head" align="right">
               Date
             </TableCell>
+            <TableCell variant="head">Pool Type</TableCell>
+            {/* Removed: Tickets Owned and View Result columns */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,6 +52,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
               <TableCell>{entry.address}</TableCell>
               <TableCell align="right">{`${entry.amount} ${entry.ticker}`}</TableCell>
               <TableCell align="right">{entry.date}</TableCell>
+              <TableCell>{entry.poolType}</TableCell>
+              {/* Removed: Tickets Owned and View Results cells */}
             </TableRow>
           ))}
         </TableBody>

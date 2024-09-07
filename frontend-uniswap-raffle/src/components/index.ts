@@ -13,3 +13,7 @@ export { TableHead } from "./TableHead";
 export { TableRow } from "./TableRow";
 export { Box } from "./Box";
 export { Link } from "./Link";
+export { Card } from "./Card";
+export { CardContent } from "./CardConent";
+export { Badge } from "./Badge";
+export { IconButton } from "./IconButton";

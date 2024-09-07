@@ -30,13 +30,8 @@ export const Result: React.FC = () => {
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        size="large"
-        onClick={handleClick}
-        disabled={isLoading}
-      >
-        {isLoading ? "Checking..." : "Check Result"}
+      <Button variant="contained" size="large" onClick={handleClick}>
+        {isLoading ? "Checking..." : "Check if you won"}
       </Button>
 
       {isWinner === true && (
@@ -54,14 +49,28 @@ export const Result: React.FC = () => {
           sx={{
             position: "absolute",
             bottom: 0,
+            left: 0,
             width: "100%",
+            padding: "20px",
+            backgroundColor: "rgba(255, 0, 0, 0.1)",
             display: "flex",
-            justifyContent: "space-around",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          {[...Array(5)].map(() => (
-            <Typography>😢</Typography>
-          ))}
+          <Typography variant="h5" sx={{ marginBottom: "10px", color: "red" }}>
+            Sorry, you didn't win this time
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {[...Array(5)].map((_, index) => (
+              <Typography
+                key={index}
+                sx={{ fontSize: "24px", margin: "0 5px" }}
+              >
+                😢
+              </Typography>
+            ))}
+          </Box>
         </Box>
       )}
     </Box>
