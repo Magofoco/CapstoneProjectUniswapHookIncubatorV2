@@ -4,6 +4,7 @@ import { Typography, Button, Box } from "../../components";
 import { useWindowSize } from "react-use";
 import { Abi } from "viem";
 import { Confetti } from "../../components/Confetti";
+import { useParams } from "react-router-dom";
 
 // TODO: Replace with actual contract ABI and address
 const CONTRACT_ABI = [] as Abi;
@@ -27,6 +28,10 @@ export const Result: React.FC = () => {
   };
 
   const { width, height } = useWindowSize();
+
+  const { pairId } = useParams<{ pairId: string }>();
+
+  console.log(pairId);
 
   return (
     <Box>
@@ -61,16 +66,6 @@ export const Result: React.FC = () => {
           <Typography variant="h5" sx={{ marginBottom: "10px", color: "red" }}>
             Sorry, you didn't win this time
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            {[...Array(5)].map((_, index) => (
-              <Typography
-                key={index}
-                sx={{ fontSize: "24px", margin: "0 5px" }}
-              >
-                😢
-              </Typography>
-            ))}
-          </Box>
         </Box>
       )}
     </Box>
