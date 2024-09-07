@@ -19,3 +19,4 @@ export { Badge } from "./Badge";
 export { IconButton } from "./IconButton";
 export { Container } from "./Container";
 export { Chip } from "./Chip";
+export { CryptoIcons } from "./CryptoIcons";

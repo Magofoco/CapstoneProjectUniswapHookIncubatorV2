@@ -1,5 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import LaunchIcon from "@mui/icons-material/Launch";
 import {
+  CryptoIcons,
   Table,
   TableBody,
   TableCell,
@@ -8,9 +11,8 @@ import {
   TableRow,
   Paper,
   IconButton,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import LaunchIcon from "@mui/icons-material/Launch";
+  Grid,
+} from "../../components";
 
 interface PoolData {
   poolPair: string;
@@ -71,26 +73,45 @@ export const Pots: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableCell>Pool Pair</TableCell>
-            <TableCell>Current Pot Value ($)</TableCell>
+            <TableCell>
+              <Grid container alignItems="center" spacing={1}>
+                <Grid>Current Pot Value</Grid>
+                <Grid>
+                  <CryptoIcons firstToken="usd" />
+                </Grid>
+              </Grid>
+            </TableCell>
             <TableCell align="right">Tickets You Own/Total Tickets</TableCell>
             <TableCell align="center">Have you won?</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {poolData.map((row) => (
-            <TableRow key={row.poolPair}>
-              <TableCell component="th" scope="row">
-                {row.poolPair}
-              </TableCell>
-              <TableCell>{row.currentPotValue}</TableCell>
-              <TableCell align="right">{`${row.ownedTickets}/${row.totalTickets}`}</TableCell>
-              <TableCell align="center">
-                <IconButton onClick={() => handleNavigate(row.poolPair)}>
-                  <LaunchIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          {poolData.map((row) => {
+            const [firstToken, secondToken] = row.poolPair.split("-");
+            console.log(firstToken, secondToken);
+            return (
+              <TableRow key={row.poolPair}>
+                <TableCell component="th" scope="row">
+                  <Grid container alignItems="center" spacing={1}>
+                    <Grid>{row.poolPair}</Grid>
+                    <Grid>
+                      <CryptoIcons
+                        firstToken={firstToken}
+                        secondToken={secondToken}
+                      />
+                    </Grid>
+                  </Grid>
+                </TableCell>
+                <TableCell>{row.currentPotValue}</TableCell>
+                <TableCell align="right">{`${row.ownedTickets}/${row.totalTickets}`}</TableCell>
+                <TableCell align="center">
+                  <IconButton onClick={() => handleNavigate(row.poolPair)}>
+                    <LaunchIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
