@@ -5,6 +5,7 @@ import { Result } from "../Result";
 import { Homepage } from "../Homepage";
 import { Pots } from "../../controls/Pots";
 import { Tickets } from "../Tickets";
+import { ErrorPage } from "../ErrorPage";
 
 export const Page: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ export const Page: React.FC = () => {
       <Route path="/pots" element={<Pots />} />
       <Route path="/my-tickets" element={<Tickets />} />
       <Route path="/my-tickets/:pairId" element={<Result />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 };

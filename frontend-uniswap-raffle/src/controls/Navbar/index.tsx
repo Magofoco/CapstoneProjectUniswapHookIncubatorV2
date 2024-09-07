@@ -23,11 +23,6 @@ export const Navbar: React.FC = () => {
             </Link>
           </Grid>
           <Grid>
-            <Link color="inherit" href="/result">
-              Result
-            </Link>
-          </Grid>
-          <Grid>
             <Link color="inherit" href="/my-tickets">
               Tickets
             </Link>
