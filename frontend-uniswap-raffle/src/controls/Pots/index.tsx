@@ -62,8 +62,7 @@ export const Pots: React.FC = () => {
   const navigate = useNavigate();
 
   const handleNavigate = (poolPair: string) => {
-    const formattedPair = poolPair.toLowerCase().replace("-", "");
-    navigate(`/pots/${formattedPair}`);
+    navigate(`/my-tickets/${poolPair}`);
   };
 
   return (
@@ -72,9 +71,9 @@ export const Pots: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableCell>Pool Pair</TableCell>
-            <TableCell>Current Pot Value</TableCell>
+            <TableCell>Current Pot Value ($)</TableCell>
             <TableCell align="right">Tickets You Own/Total Tickets</TableCell>
-            <TableCell align="center"></TableCell>
+            <TableCell align="center">Have you won?</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
