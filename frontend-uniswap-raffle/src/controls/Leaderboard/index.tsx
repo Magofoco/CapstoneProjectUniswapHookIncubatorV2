@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "../../components";
+import { CryptoIcons } from "../../components/CryptoIcons";
 
 export interface LeaderboardEntry {
   address: string;
@@ -25,8 +26,6 @@ export interface LeaderboardProps {
 }
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
-  // Removed: const navigate = useNavigate();
-
   return (
     <TableContainer component={Paper}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -43,19 +42,26 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ entries }) => {
               Date
             </TableCell>
             <TableCell variant="head">Pool Type</TableCell>
-            {/* Removed: Tickets Owned and View Result columns */}
           </TableRow>
         </TableHead>
         <TableBody>
-          {entries.map((entry, index) => (
-            <TableRow key={index}>
-              <TableCell>{entry.address}</TableCell>
-              <TableCell align="right">{`${entry.amount} ${entry.ticker}`}</TableCell>
-              <TableCell align="right">{entry.date}</TableCell>
-              <TableCell>{entry.poolType}</TableCell>
-              {/* Removed: Tickets Owned and View Results cells */}
-            </TableRow>
-          ))}
+          {entries.map((entry, index) => {
+            const [firstToken, secondToken] = entry.poolType.split("-");
+
+            return (
+              <TableRow key={index}>
+                <TableCell>{entry.address}</TableCell>
+                <TableCell align="right">{`${entry.amount} ${entry.ticker}`}</TableCell>
+                <TableCell align="right">{entry.date}</TableCell>
+                <TableCell>
+                  <CryptoIcons
+                    firstToken={firstToken}
+                    secondToken={secondToken}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
