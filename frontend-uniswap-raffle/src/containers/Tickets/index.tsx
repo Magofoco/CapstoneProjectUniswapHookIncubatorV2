@@ -2,8 +2,8 @@ import React from "react";
 import { Container } from "../../components";
 import Grid from "@mui/material/Grid2";
 import { TicketsCard } from "../../controls/TicketsCard";
+import { useNavigate } from "react-router-dom";
 
-// Sample data for demonstration purposes
 const ticketsData = [
   {
     poolPair: "ETH-USDT",
@@ -50,9 +50,10 @@ const ticketsData = [
 ];
 
 export const Tickets: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleTicketClick = (poolPair: string) => {
-    console.log(`Clicked on tickets for ${poolPair}`);
-    // Add your logic for handling ticket clicks
+    navigate(`/my-tickets/${poolPair}`);
   };
 
   return (
