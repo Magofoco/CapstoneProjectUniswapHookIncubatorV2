@@ -6,14 +6,14 @@ const leaderboardData: LeaderboardEntry[] = [
   {
     address: "0x1234...5678",
     amount: 1.5,
-    ticker: "ETH",
     date: "2023-04-15",
+    poolType: "ETH-USDC",
   },
   {
     address: "0xabcd...efgh",
     amount: 1000,
-    ticker: "LINK",
     date: "2023-04-14",
+    poolType: "LINK-UNI",
   },
 ];
 
