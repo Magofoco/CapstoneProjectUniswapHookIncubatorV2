@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "../../components";
 import Grid from "@mui/material/Grid2";
 import { TicketsCard } from "../../controls/TicketsCard";
 import { useNavigate } from "react-router-dom";
+import {
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Box,
+} from "@mui/material";
 
 const ticketsData = [
   {
@@ -51,15 +58,52 @@ const ticketsData = [
 
 export const Tickets: React.FC = () => {
   const navigate = useNavigate();
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const handleTicketClick = (poolPair: string) => {
     navigate(`/my-tickets/${poolPair}`);
   };
 
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStatusFilter(event.target.value);
+  };
+
+  const filteredTicketsData = ticketsData.filter((ticket) =>
+    statusFilter === "all" ? true : ticket.raffleStatus === statusFilter
+  );
+
   return (
     <Container maxWidth="lg">
+      <Box sx={{ mb: 3 }}>
+        <FormControl component="fieldset">
+          <RadioGroup
+            row
+            aria-label="status-filter"
+            name="status-filter"
+            value={statusFilter}
+            onChange={handleFilterChange}
+          >
+            <FormControlLabel value="all" control={<Radio />} label="All" />
+            <FormControlLabel
+              value="active"
+              control={<Radio />}
+              label="Active"
+            />
+            <FormControlLabel
+              value="completed"
+              control={<Radio />}
+              label="Completed"
+            />
+            <FormControlLabel
+              value="closed"
+              control={<Radio />}
+              label="Closed"
+            />
+          </RadioGroup>
+        </FormControl>
+      </Box>
       <Grid container spacing={3}>
-        {ticketsData.map((ticket, index) => (
+        {filteredTicketsData.map((ticket, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
             <TicketsCard
               poolPair={ticket.poolPair}
