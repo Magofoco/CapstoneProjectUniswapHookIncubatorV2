@@ -43,7 +43,7 @@ const leaderboardData: LeaderboardEntry[] = [
     address: "0xaaaa...bbbb",
     amount: 3.33,
     date: "2023-04-18",
-    poolType: "UNI-WUNI",
+    poolType: "UNI-ETH",
   },
   {
     address: "0xcccc...dddd",

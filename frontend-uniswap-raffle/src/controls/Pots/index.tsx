@@ -157,7 +157,11 @@ export const Pots: React.FC = () => {
           position: "sticky",
           top: 0,
           zIndex: 1,
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "#2D2D2D",
+          padding: "16px",
+          borderRadius: "8px",
+          width: "fit-content",
+          alignSelf: "center",
         }}
       >
         <RadioGroup
@@ -167,14 +171,42 @@ export const Pots: React.FC = () => {
           value={statusFilter}
           onChange={handleFilterChange}
         >
-          <FormControlLabel value="all" control={<Radio />} label="All" />
-          <FormControlLabel value="active" control={<Radio />} label="Active" />
+          <FormControlLabel
+            value="all"
+            control={
+              <Radio
+                sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+              />
+            }
+            label={<Typography sx={{ color: "white" }}>All</Typography>}
+          />
+          <FormControlLabel
+            value="active"
+            control={
+              <Radio
+                sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+              />
+            }
+            label={<Typography sx={{ color: "white" }}>Active</Typography>}
+          />
           <FormControlLabel
             value="completed"
-            control={<Radio />}
-            label="Completed"
+            control={
+              <Radio
+                sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+              />
+            }
+            label={<Typography sx={{ color: "white" }}>Completed</Typography>}
           />
-          <FormControlLabel value="closed" control={<Radio />} label="Closed" />
+          <FormControlLabel
+            value="closed"
+            control={
+              <Radio
+                sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+              />
+            }
+            label={<Typography sx={{ color: "white" }}>Closed</Typography>}
+          />
         </RadioGroup>
       </FormControl>
       <FixedTableContainer component={Paper}>

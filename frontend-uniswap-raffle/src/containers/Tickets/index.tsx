@@ -74,7 +74,19 @@ export const Tickets: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ mb: 3 }}>
+      <Box
+        sx={{
+          my: 5,
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          backgroundColor: "#2D2D2D",
+          padding: "16px",
+          borderRadius: "8px",
+          width: "fit-content",
+          alignSelf: "center",
+        }}
+      >
         <FormControl component="fieldset">
           <RadioGroup
             row
@@ -83,21 +95,45 @@ export const Tickets: React.FC = () => {
             value={statusFilter}
             onChange={handleFilterChange}
           >
-            <FormControlLabel value="all" control={<Radio />} label="All" />
+            <FormControlLabel
+              value="all"
+              control={
+                <Radio
+                  sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+                />
+              }
+              label="All"
+              sx={{ color: "white" }}
+            />
             <FormControlLabel
               value="active"
-              control={<Radio />}
+              control={
+                <Radio
+                  sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+                />
+              }
               label="Active"
+              sx={{ color: "white" }}
             />
             <FormControlLabel
               value="completed"
-              control={<Radio />}
+              control={
+                <Radio
+                  sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+                />
+              }
               label="Completed"
+              sx={{ color: "white" }}
             />
             <FormControlLabel
               value="closed"
-              control={<Radio />}
+              control={
+                <Radio
+                  sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
+                />
+              }
               label="Closed"
+              sx={{ color: "white" }}
             />
           </RadioGroup>
         </FormControl>
