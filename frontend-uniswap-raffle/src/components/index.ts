@@ -20,3 +20,4 @@ export { IconButton } from "./IconButton";
 export { Container } from "./Container";
 export { Chip } from "./Chip";
 export { CryptoIcons } from "./CryptoIcons";
+export { FormControl } from "./FormControl";
