@@ -23,90 +23,18 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { hardcodedData } from "../../hardcodedData";
 
 interface PoolData {
   poolPair: string;
   currentPotValue: string;
   ownedTickets: number;
   totalTickets: number;
-  status: "active" | "completed" | "closed";
+  status: string;
 }
 
-const poolData: PoolData[] = [
-  {
-    poolPair: "USDC-ETH",
-    currentPotValue: "$100,000",
-    ownedTickets: 10849,
-    totalTickets: 100000,
-    status: "active",
-  },
-  {
-    poolPair: "ETH-DAI",
-    currentPotValue: "$75,000",
-    ownedTickets: 5432,
-    totalTickets: 75000,
-    status: "completed",
-  },
-  {
-    poolPair: "LINK-ETH",
-    currentPotValue: "$50,000",
-    ownedTickets: 3210,
-    totalTickets: 50000,
-    status: "active",
-  },
-  {
-    poolPair: "UNI-USDC",
-    currentPotValue: "$30,000",
-    ownedTickets: 2100,
-    totalTickets: 30000,
-    status: "closed",
-  },
-  {
-    poolPair: "AAVE-ETH",
-    currentPotValue: "$40,000",
-    ownedTickets: 4567,
-    totalTickets: 40000,
-    status: "active",
-  },
-  {
-    poolPair: "MATIC-USDT",
-    currentPotValue: "$60,000",
-    ownedTickets: 7890,
-    totalTickets: 80000,
-    status: "active",
-  },
-  {
-    poolPair: "SOL-USDC",
-    currentPotValue: "$45,000",
-    ownedTickets: 3456,
-    totalTickets: 60000,
-    status: "completed",
-  },
-  {
-    poolPair: "DOT-ETH",
-    currentPotValue: "$35,000",
-    ownedTickets: 2345,
-    totalTickets: 45000,
-    status: "closed",
-  },
-  {
-    poolPair: "ADA-USDT",
-    currentPotValue: "$25,000",
-    ownedTickets: 1234,
-    totalTickets: 35000,
-    status: "active",
-  },
-  {
-    poolPair: "XRP-ETH",
-    currentPotValue: "$20,000",
-    ownedTickets: 987,
-    totalTickets: 25000,
-    status: "completed",
-  },
-];
-
 const FixedTableContainer = styled(TableContainer)({
-  height: "calc(100vh - 150px)", // Adjust this value as needed
+  height: "calc(100vh - 150px)",
   display: "flex",
   flexDirection: "column",
 });
@@ -114,6 +42,10 @@ const FixedTableContainer = styled(TableContainer)({
 const ScrollableTableBody = styled(TableBody)({
   overflow: "auto",
 });
+
+const formatNumber = (num: number): string => {
+  return num >= 1000 ? num.toLocaleString() : num.toString();
+};
 
 export const Pots: React.FC = () => {
   const navigate = useNavigate();
@@ -137,7 +69,7 @@ export const Pots: React.FC = () => {
     setStatusFilter(event.target.value);
   };
 
-  const filteredPoolData = poolData.filter((pool) =>
+  const filteredPoolData = hardcodedData.filter((pool) =>
     statusFilter === "all" ? true : pool.status === statusFilter
   );
 
@@ -247,7 +179,11 @@ export const Pots: React.FC = () => {
                     </Grid>
                   </TableCell>
                   <TableCell>{row.currentPotValue}</TableCell>
-                  <TableCell align="right">{`${row.ownedTickets}/${row.totalTickets}`}</TableCell>
+                  <TableCell align="right">
+                    {`${formatNumber(row.ownedTickets)}/${formatNumber(
+                      row.totalTickets
+                    )}`}
+                  </TableCell>
                   <TableCell align="center">
                     <Chip
                       label={

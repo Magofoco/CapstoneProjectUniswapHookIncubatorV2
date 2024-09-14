@@ -10,51 +10,7 @@ import {
   RadioGroup,
   Box,
 } from "@mui/material";
-
-const ticketsData = [
-  {
-    poolPair: "ETH-USDT",
-    ownedTickets: 5,
-    totalTickets: 100,
-    raffleStatus: "active",
-  },
-  {
-    poolPair: "BTC-USDC",
-    ownedTickets: 2,
-    totalTickets: 50,
-    raffleStatus: "completed",
-  },
-  {
-    poolPair: "DOT-BNB",
-    ownedTickets: 0,
-    totalTickets: 75,
-    raffleStatus: "closed",
-  },
-  {
-    poolPair: "ADA-USDT",
-    ownedTickets: 8,
-    totalTickets: 150,
-    raffleStatus: "active",
-  },
-  {
-    poolPair: "SOL-BUSD",
-    ownedTickets: 3,
-    totalTickets: 80,
-    raffleStatus: "active",
-  },
-  {
-    poolPair: "LINK-ETH",
-    ownedTickets: 1,
-    totalTickets: 60,
-    raffleStatus: "completed",
-  },
-  {
-    poolPair: "XRP-USDC",
-    ownedTickets: 0,
-    totalTickets: 120,
-    raffleStatus: "closed",
-  },
-];
+import { hardcodedData } from "../../hardcodedData";
 
 export const Tickets: React.FC = () => {
   const navigate = useNavigate();
@@ -68,8 +24,8 @@ export const Tickets: React.FC = () => {
     setStatusFilter(event.target.value);
   };
 
-  const filteredTicketsData = ticketsData.filter((ticket) =>
-    statusFilter === "all" ? true : ticket.raffleStatus === statusFilter
+  const filteredTicketsData = hardcodedData.filter((ticket) =>
+    statusFilter === "all" ? true : ticket.status === statusFilter
   );
 
   return (
@@ -145,9 +101,7 @@ export const Tickets: React.FC = () => {
               poolPair={ticket.poolPair}
               ownedTickets={ticket.ownedTickets}
               totalTickets={ticket.totalTickets}
-              raffleStatus={
-                ticket.raffleStatus as "active" | "completed" | "closed"
-              }
+              raffleStatus={ticket.status as "active" | "completed" | "closed"}
               onTicketClick={() => handleTicketClick(ticket.poolPair)}
             />
           </Grid>

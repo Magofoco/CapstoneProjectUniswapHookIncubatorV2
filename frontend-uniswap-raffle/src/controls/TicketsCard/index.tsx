@@ -1,5 +1,12 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Chip } from "../../components";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
+  CryptoIcons,
+} from "../../components";
 import { ArrowForward } from "@mui/icons-material"; // Import the arrow icon
 import { Stack } from "@mui/material";
 
@@ -10,6 +17,10 @@ interface TicketsCardProps {
   raffleStatus: "active" | "completed" | "closed";
   onTicketClick: () => void;
 }
+
+const formatNumber = (num: number): string => {
+  return num >= 1000 ? num.toLocaleString() : num.toString();
+};
 
 export const TicketsCard: React.FC<TicketsCardProps> = ({
   poolPair,
@@ -33,6 +44,8 @@ export const TicketsCard: React.FC<TicketsCardProps> = ({
   const capitalizedStatus =
     raffleStatus.charAt(0).toUpperCase() + raffleStatus.slice(1);
 
+  const [firstToken, secondToken] = poolPair.split("-");
+
   return (
     <Card
       onClick={onTicketClick}
@@ -51,18 +64,21 @@ export const TicketsCard: React.FC<TicketsCardProps> = ({
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6" gutterBottom>
-            {poolPair}
-          </Typography>
-          <ArrowForward color="action" /> {/* Add clickable icon */}
+          <Stack direction="row" spacing={1} alignItems="center">
+            <CryptoIcons firstToken={firstToken} secondToken={secondToken} />
+            <Typography variant="h6">{poolPair}</Typography>
+          </Stack>
+          <ArrowForward color="action" />
         </Stack>
         <Box mb={2}>
           <Typography variant="body1" fontWeight="bold">
             Your Tickets:{" "}
-            <span style={{ color: "primary.main" }}>{ownedTickets}</span>
+            <span style={{ color: "primary.main" }}>
+              {formatNumber(ownedTickets)}
+            </span>
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Total Tickets: {totalTickets}
+            Total Tickets: {formatNumber(totalTickets)}
           </Typography>
         </Box>
         <Chip
