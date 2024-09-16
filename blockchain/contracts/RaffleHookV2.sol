@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT 
 pragma solidity 0.8.26;
 
-import {BaseHook} from "v4-periphery/src/base/hooks/BaseHook.sol";
+import {BaseHook} from "../lib/v4-periphery/src/base/hooks/BaseHook.sol";
 import {ERC20} from "solmate/src/tokens/ERC20.sol";
 
 import {CurrencyLibrary, Currency} from "v4-core/types/Currency.sol";
@@ -262,6 +262,6 @@ contract RaffleHookV2 is BaseHook {
 
     // dummy function for randomizer on ChainLink later
     function getRandomNumber(uint start, uint end) internal returns (uint) { 
-        return uint(100);
+        return 100;
     }
 }
