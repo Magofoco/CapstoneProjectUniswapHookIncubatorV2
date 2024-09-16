@@ -9,170 +9,102 @@ import {IPoolManager} from "@uniswap/v4-core/src/interfaces/IPoolManager.sol";
 
 import {CurrencyLibrary, Currency} from "@uniswap/v4-core/src/types/Currency.sol";
 import {BalanceDeltaLibrary, BalanceDelta} from "@uniswap/v4-core/src/types/BalanceDelta.sol";
-import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
+import {PoolId, PoolKey, PoolIdLibrary} from "@uniswap/v4-core/src/types/PoolId.sol";
 
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
 
+
+/**
+* RaffleHook: Takes a percentage of the user's swap token0 for a raffle prize.
+* The user receives the same number of raffle tickets as the amount of token0 swapped.
+* The more the user swaps, the more tickets they receive.
+* 
+* The prize grows with each swap until it reaches the required number of swaps to close the raffle (`swapsPerRaffle`).
+* With the final swap, a random winner is chosen, and a new raffle begins.
+* 
+* The winner of each raffle can `withdrawPrize()` at any time.
+* 
+* TODO: Deduct XX% of the prize for the hook owner.
+*/
 contract RaffleHook is BaseHook {
-
-    
-    // TODO; look for slot optimization
-
     using BalanceDeltaLibrary for BalanceDelta;
+    using PoolIdLibrary for PoolKey;
 
     struct RaffleData {
         address owner;
-        uint256 end; // this would be 15 for UserA and 35 for UserB
+        uint256 end;
     }
+
+    struct WinnerData {
+        address winner;
+        uint256 prizeAmount;
+        bool withdrawn;
+    }
+
+    event RaffleClosed(PoolId poolId, uint256 raffleId, uint256 amount, address winner, uint256 ticketNunmber);
+
+    error SenderNotWinner();
+    error PrizeAlreadyWithdrawn();
 
     // Percentage of token0 for raffle tiket (100=1%)
     uint128 public constant RAFFLE_TIKETS_PRICE = 100;
 
     // Amounts of swaps that will close the raffle.
-    uint32 public immutable raffleSize;
+    uint32 public immutable swapsPerRaflle;
 
-    // Current raffle id
-    uint256 public raffleId;
-
-    // raffleId => start => raffle numbers
-    mapping(uint256 => mapping(uint256 => RaffleData)) public raffleNumbers;
-
-    // raffleId => raffleStarts
-    mapping(uint256 => uint256[]) raffleStarts;
-
-    // Swap counter for current raffleId incremented when a swap happens.
-    uint256 public swapCounter;
-
+    // Hook owner
     address public owner;
 
-    struct WinnerData {
-        address winner;
-        uint256 prizeAmount;
-        uint256 withdrawn;
-    }
+    // Current raffle id for the poolId
+    mapping(PoolId => uint256) raffleIds;
 
-    // winners raffleId => winner data
-    mapping(uint256 => WinnerData) public winners;
+    // poolId => raffleId => start => raffle numbers
+    mapping(PoolId => mapping(uint256 => mapping(uint256 => RaffleData))) public raffleNumbers;
 
-    constructor(IPoolManager _manager, uint32 _raffleSize) BaseHook(_manager) {
-        raffleSize = _raffleSize;
+    // poolId => raffleId => raffleStarts
+    mapping(PoolId => mapping(uint256 => uint256[])) raffleStarts;
+
+    // Swap counter for current raffleId incremented when a swap happens.
+    mapping(PoolId => uint256) public swapCounter;
+
+
+    // winners poolId => raffleId => winner data
+    mapping(PoolId => mapping(uint256 => WinnerData)) public winners;
+
+    constructor(IPoolManager _manager, uint32 _swapsPerRaflle) BaseHook(_manager) {
+        swapsPerRaflle = _swapsPerRaflle;
         owner = msg.sender;
     }
 
-    function getHookPermissions()
-        public
-        pure
-        override
-        returns (Hooks.Permissions memory)
-    {
-        return
-            Hooks.Permissions({
-                beforeInitialize: false,
-                afterInitialize: false,
-                beforeAddLiquidity: false,
-                beforeRemoveLiquidity: false,
-                afterAddLiquidity: false,
-                afterRemoveLiquidity: false,
-                beforeSwap: false,
-                afterSwap: true,
-                beforeDonate: false,
-                afterDonate: false,
-                beforeSwapReturnDelta: false,
-                afterSwapReturnDelta: false,
-                afterAddLiquidityReturnDelta: false,
-                afterRemoveLiquidityReturnDelta: false
-            });
+    function getHookPermissions() public pure override returns (Hooks.Permissions memory) {
+        return Hooks.Permissions({
+            beforeInitialize: false,
+            afterInitialize: false,
+            beforeAddLiquidity: false,
+            beforeRemoveLiquidity: false,
+            afterAddLiquidity: false,
+            afterRemoveLiquidity: false,
+            beforeSwap: false,
+            afterSwap: true,
+            beforeDonate: false,
+            afterDonate: false,
+            beforeSwapReturnDelta: false,
+            afterSwapReturnDelta: false,
+            afterAddLiquidityReturnDelta: false,
+            afterRemoveLiquidityReturnDelta: false
+        });
     }
 
-    /* 
-    // Credit: DixonW
-    Currency denominatorCurrency; // key of token0 of the Raffle, i.e. ETH initailly
+    function withdrawPrize(PoolKey calldata key, uint256 _raffleId) external {
+        PoolId poolId = key.toId();
+        if (winners[poolId][_raffleId].winner != msg.sender) revert SenderNotWinner();
+        if (winners[poolId][_raffleId].withdrawn) revert PrizeAlreadyWithdrawn();
 
-    function beforeSwap (IHooks self, PoolKey memory key,IPoolManager.SwapParams memroy params, bytes calldata hookData)
-    {
-        
-        //... taken from the course
-        
-        // any return in unspecified is passed to the afterSwap hook for handling
-        int128 hookDeltaSpecified = hookReturn.getSpecifiedDelta();
+        winners[poolId][_raffleId].withdrawn = true;
 
-        // Update the swap amount according to the hook's return, and check that the swap type doesnt change (exact input/output)
-        if (hookDeltaSpecified != 0) {
-            bool exactInput = amountToSwap < 0;
-            amountToSwap += hookDeltaSpecified;
-            if (exactInput ? amountToSwap > 0 : amountToSwap < 0) {
-                HookDeltaExceedsSwapAmount.selector.revertWith();
-            }
-        }
-
-        // taking a cut from token0.
-        uint128 commissionAmount = (token0BalanceBefore * COMMISSION_RATE) / 10000;    // from deniz
-        
-        // assuming we always take ETH
-        if(params.zeroToOne){
-            BeforeSwapDelta beforeSwapDelta = toBeforeSwapDelta(-commissionAmount,0);
-        }else{
-            BeforeSwapDelta beforeSwapDelta = toBeforeSwapDelta(0, -commissionAmount);
-        }
-
-        // minting claim token from PM for later winner to claim
-        key.currency0.take(
-            PoolManaer,
-            address(this),
-            commissionAmount,
-            true  
-        );
-
-        return (this.beforeSwap.selector, beforeSwapDelta, 0);
+        ERC20(Currency.unwrap(key.currency0)).transfer(msg.sender, winners[poolId][_raffleId].prizeAmount);
     }
 
-
-    // when user claim the prize
-    function claimPrizeByWinner() external
-    {
-        // retrive the winner price amount
-        // assuming WinnerMap stores (sender -> (amount, 0 or 1, claimed))
-        (amountPrize, currencyPrize, claimed) = WinnerMap(msg.sender);
-        if(claimed){
-            // TODO: return
-            return;
-        }else{
-            // TODO: update claimed = false
-        }
-
-        poolManager.unlock(
-            abi.encode(
-                CallbackData(
-                    amountPrize, 
-                    currencyPrize,
-                    msg.sender
-                )
-            )
-        )
-    }
-
-
-    function _unlockCallback(
-        bytes calldata data
-    ) internal override returns (bytes memory){
-        CallbackData memory callbackData = abi.decode(data, (CallbackData));
-
-        // burn the claim token and settle / transfer
-        callbackData.currencyPrize.settle(
-            poolManager,
-            callbackData.sender,
-            callbackData.amountPrize,
-            false
-        )
-
-        // TODO: transfer token0 back to Winner
-        // ....
-
-        // TODO: transfer profit to Safe
-        // ...
-    }
-    */
-    
     function afterSwap(
         address sender,
         PoolKey calldata key,
@@ -183,78 +115,83 @@ contract RaffleHook is BaseHook {
         // Only if token0 is ERC20
         if (key.currency0.isNative()) return (this.afterSwap.selector, 0);
 
-        uint128 amount0 = uint128(
-            delta.amount0() < 0 ? -delta.amount0() : delta.amount0()
-        );
+        uint128 amount0 = uint128(delta.amount0() < 0 ? -delta.amount0() : delta.amount0());
 
         // Swap amount of token0 is too small
         if (amount0 < 100) return (this.afterSwap.selector, 0);
 
-        _assignNumbers(sender, amount0);
+        PoolId poolId = key.toId();
+
+        _assignNumbers(poolId, sender, amount0);
 
         uint256 addToPrizeAmt = uint256(amount0 * RAFFLE_TIKETS_PRICE) / 10000;
 
-        // TODO: take addToPrizeAmt of token0 from 
         // TODO: take hook fee
 
-        // Add to the prize
-        winners[raffleId].prizeAmount += addToPrizeAmt;
-        swapCounter++;
+        // Take addToPrizeAmt of token0 from user
+        ERC20(Currency.unwrap(key.currency0)).transferFrom(sender, address(this), addToPrizeAmt);
 
-        if (swapCounter >= raffleSize) {
-            _closeRaffle();
+        // Add token amount to the prize
+        uint256 _raffleId = raffleIds[poolId];
+        winners[poolId][_raffleId].prizeAmount += addToPrizeAmt;
+
+        swapCounter[poolId]++;
+
+        if (swapCounter[poolId] >= swapsPerRaflle) {
+            _closeRaffle(poolId);
         }
 
         return (this.afterSwap.selector, 0);
     }
 
-    function _closeRaffle() private {
-        // get the last number of current raffle
-        uint256 lastEnd = raffleNumbers[raffleId][
-            raffleStarts[raffleId][raffleStarts[raffleId].length - 1]
-        ].end;
+    function _closeRaffle(PoolId poolId) private {
+        uint256 _raffleId = raffleIds[poolId];
+        uint256 _lastId = raffleStarts[poolId][_raffleId].length - 1;
+        uint256 _lastStar = raffleStarts[poolId][_raffleId][_lastId];
+        // Get the last number of current raffle
+        uint256 lastEnd = raffleNumbers[poolId][_raffleId][_lastStar].end;
 
-        // NOTE: random temporary solution. Should call an oracle to get a real random number
-        uint256 rnd = _randomish(lastEnd);
+        // NOTE: Temporary random solution. Should call an oracle to get a real random number
+        uint256 winnerTicket = _randomish(lastEnd);
 
         // find the winner
-        winners[raffleId].winner = getTicketOwner(rnd);
+        address winner = getTicketOwner(poolId, winnerTicket);
+        winners[poolId][_raffleId].winner = winner;
 
-        raffleId++;
+        emit RaffleClosed(poolId, _raffleId, winners[poolId][_raffleId].prizeAmount, winner, winnerTicket);
+
+        // Start a new raffle
+        raffleIds[poolId]++;
     }
 
-    function _assignNumbers(address ticketOwner, uint128 amount) private {
-        uint256 lastStart = raffleStarts[raffleId][
-            raffleStarts[raffleId].length - 1
-        ];
-        uint256 lastEnd = raffleNumbers[raffleId][lastStart].end;
+    function _assignNumbers(PoolId poolId, address ticketOwner, uint128 amount) private {
+        uint256 _raffleId = raffleIds[poolId];
+        uint256 _lastId = raffleStarts[poolId][_raffleId].length - 1;
+        uint256 lastStart = raffleStarts[poolId][_raffleId][_lastId];
+
+        uint256 lastEnd = raffleNumbers[poolId][_raffleId][lastStart].end;
         uint256 start = lastEnd + 1;
         uint256 end = start + uint256(amount); // for amount we could use gwei so we do not store than many zeros?
 
-        raffleNumbers[raffleId][start] = RaffleData(ticketOwner, end);
-        raffleStarts[raffleId].push(start);
+        raffleNumbers[poolId][_raffleId][start] = RaffleData(ticketOwner, end);
+        raffleStarts[poolId][_raffleId].push(start);
     }
 
     function _randomish(uint256 max) private view returns (uint256) {
-        return
-            (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) %
-                max) + 1;
+        // Get a random number between 0 and max
+        return (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % max) + 1;
     }
 
-    function getTicketOwner(
-        uint256 ticketNumber
-    ) public view returns (address) {
+    function getTicketOwner(PoolId poolId, uint256 ticketNumber) public view returns (address) {
+        uint256 _raffleId = raffleIds[poolId];
         uint256 low = 0;
-        uint256 high = raffleStarts[raffleId].length - 1;
+        uint256 high = raffleStarts[poolId][_raffleId].length - 1;
         // binary search
         while (low <= high) {
             uint256 mid = (low + high) / 2;
-            uint256 start = raffleStarts[raffleId][mid];
-            if (
-                ticketNumber >= start &&
-                ticketNumber <= raffleNumbers[raffleId][start].end
-            ) {
-                return raffleNumbers[raffleId][start].owner;
+            uint256 start = raffleStarts[poolId][_raffleId][mid];
+            if (ticketNumber >= start && ticketNumber <= raffleNumbers[poolId][_raffleId][start].end) {
+                return raffleNumbers[poolId][_raffleId][start].owner;
             } else if (ticketNumber < start) {
                 high = mid - 1;
             } else {
