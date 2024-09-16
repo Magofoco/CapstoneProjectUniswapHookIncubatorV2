@@ -84,7 +84,95 @@ contract RaffleHook is BaseHook {
             });
     }
 
-    //
+    /* 
+    // Credit: DixonW
+    Currency denominatorCurrency; // key of token0 of the Raffle, i.e. ETH initailly
+
+    function beforeSwap (IHooks self, PoolKey memory key,IPoolManager.SwapParams memroy params, bytes calldata hookData)
+    {
+        
+        //... taken from the course
+        
+        // any return in unspecified is passed to the afterSwap hook for handling
+        int128 hookDeltaSpecified = hookReturn.getSpecifiedDelta();
+
+        // Update the swap amount according to the hook's return, and check that the swap type doesnt change (exact input/output)
+        if (hookDeltaSpecified != 0) {
+            bool exactInput = amountToSwap < 0;
+            amountToSwap += hookDeltaSpecified;
+            if (exactInput ? amountToSwap > 0 : amountToSwap < 0) {
+                HookDeltaExceedsSwapAmount.selector.revertWith();
+            }
+        }
+
+        // taking a cut from token0.
+        uint128 commissionAmount = (token0BalanceBefore * COMMISSION_RATE) / 10000;    // from deniz
+        
+        // assuming we always take ETH
+        if(params.zeroToOne){
+            BeforeSwapDelta beforeSwapDelta = toBeforeSwapDelta(-commissionAmount,0);
+        }else{
+            BeforeSwapDelta beforeSwapDelta = toBeforeSwapDelta(0, -commissionAmount);
+        }
+
+        // minting claim token from PM for later winner to claim
+        key.currency0.take(
+            PoolManaer,
+            address(this),
+            commissionAmount,
+            true  
+        );
+
+        return (this.beforeSwap.selector, beforeSwapDelta, 0);
+    }
+
+
+    // when user claim the prize
+    function claimPrizeByWinner() external
+    {
+        // retrive the winner price amount
+        // assuming WinnerMap stores (sender -> (amount, 0 or 1, claimed))
+        (amountPrize, currencyPrize, claimed) = WinnerMap(msg.sender);
+        if(claimed){
+            // TODO: return
+            return;
+        }else{
+            // TODO: update claimed = false
+        }
+
+        poolManager.unlock(
+            abi.encode(
+                CallbackData(
+                    amountPrize, 
+                    currencyPrize,
+                    msg.sender
+                )
+            )
+        )
+    }
+
+
+    function _unlockCallback(
+        bytes calldata data
+    ) internal override returns (bytes memory){
+        CallbackData memory callbackData = abi.decode(data, (CallbackData));
+
+        // burn the claim token and settle / transfer
+        callbackData.currencyPrize.settle(
+            poolManager,
+            callbackData.sender,
+            callbackData.amountPrize,
+            false
+        )
+
+        // TODO: transfer token0 back to Winner
+        // ....
+
+        // TODO: transfer profit to Safe
+        // ...
+    }
+    */
+    
     function afterSwap(
         address sender,
         PoolKey calldata key,
