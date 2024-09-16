@@ -14,16 +14,18 @@ import {PoolKey} from "@uniswap/v4-core/src/types/PoolKey.sol";
 import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
 
 contract RaffleHook is BaseHook {
-
-    
     // TODO; look for slot optimization
 
     using BalanceDeltaLibrary for BalanceDelta;
 
     struct RaffleData {
         address owner;
-        uint256 end; // this would be 15 for UserA and 35 for UserB
+        uint256 end;
     }
+
+    event RaffleClosed(uint256 raffleId, uint256 amount, address winner, uint256 ticketNunmber);
+
+    error SenderNotWinner(uint256 raffleId);
 
     // Percentage of token0 for raffle tiket (100=1%)
     uint128 public constant RAFFLE_TIKETS_PRICE = 100;
@@ -48,7 +50,7 @@ contract RaffleHook is BaseHook {
     struct WinnerData {
         address winner;
         uint256 prizeAmount;
-        uint256 withdrawn;
+        bool withdrawn;
     }
 
     // winners raffleId => winner data
@@ -59,29 +61,31 @@ contract RaffleHook is BaseHook {
         owner = msg.sender;
     }
 
-    function getHookPermissions()
-        public
-        pure
-        override
-        returns (Hooks.Permissions memory)
-    {
-        return
-            Hooks.Permissions({
-                beforeInitialize: false,
-                afterInitialize: false,
-                beforeAddLiquidity: false,
-                beforeRemoveLiquidity: false,
-                afterAddLiquidity: false,
-                afterRemoveLiquidity: false,
-                beforeSwap: false,
-                afterSwap: true,
-                beforeDonate: false,
-                afterDonate: false,
-                beforeSwapReturnDelta: false,
-                afterSwapReturnDelta: false,
-                afterAddLiquidityReturnDelta: false,
-                afterRemoveLiquidityReturnDelta: false
-            });
+    function getHookPermissions() public pure override returns (Hooks.Permissions memory) {
+        return Hooks.Permissions({
+            beforeInitialize: false,
+            afterInitialize: false,
+            beforeAddLiquidity: false,
+            beforeRemoveLiquidity: false,
+            afterAddLiquidity: false,
+            afterRemoveLiquidity: false,
+            beforeSwap: false,
+            afterSwap: true,
+            beforeDonate: false,
+            afterDonate: false,
+            beforeSwapReturnDelta: false,
+            afterSwapReturnDelta: false,
+            afterAddLiquidityReturnDelta: false,
+            afterRemoveLiquidityReturnDelta: false
+        });
+    }
+
+    function withdrawPrize(uint256 _raffleId) external {
+        if (winners[_raffleId].winner != msg.sender) revert SenderNotWinner(_raffleId);
+
+        winners[_raffleId].withdrawn = true;
+
+        // TODO: token0.transfer(msg.sender,winners[_raffleId].prizeAmount)
     }
 
     /* 
@@ -172,7 +176,7 @@ contract RaffleHook is BaseHook {
         // ...
     }
     */
-    
+
     function afterSwap(
         address sender,
         PoolKey calldata key,
@@ -183,9 +187,7 @@ contract RaffleHook is BaseHook {
         // Only if token0 is ERC20
         if (key.currency0.isNative()) return (this.afterSwap.selector, 0);
 
-        uint128 amount0 = uint128(
-            delta.amount0() < 0 ? -delta.amount0() : delta.amount0()
-        );
+        uint128 amount0 = uint128(delta.amount0() < 0 ? -delta.amount0() : delta.amount0());
 
         // Swap amount of token0 is too small
         if (amount0 < 100) return (this.afterSwap.selector, 0);
@@ -194,10 +196,12 @@ contract RaffleHook is BaseHook {
 
         uint256 addToPrizeAmt = uint256(amount0 * RAFFLE_TIKETS_PRICE) / 10000;
 
-        // TODO: take addToPrizeAmt of token0 from 
         // TODO: take hook fee
 
-        // Add to the prize
+        // Take addToPrizeAmt of token0 from user
+        ERC20(Currency.unwrap(key.currency0)).transferFrom(sender, address(this), addToPrizeAmt);
+
+        // Add token amount to the prize
         winners[raffleId].prizeAmount += addToPrizeAmt;
         swapCounter++;
 
@@ -209,24 +213,23 @@ contract RaffleHook is BaseHook {
     }
 
     function _closeRaffle() private {
-        // get the last number of current raffle
-        uint256 lastEnd = raffleNumbers[raffleId][
-            raffleStarts[raffleId][raffleStarts[raffleId].length - 1]
-        ].end;
+        // Get the last number of current raffle
+        uint256 lastEnd = raffleNumbers[raffleId][raffleStarts[raffleId][raffleStarts[raffleId].length - 1]].end;
 
-        // NOTE: random temporary solution. Should call an oracle to get a real random number
-        uint256 rnd = _randomish(lastEnd);
+        // NOTE: Temporary random solution. Should call an oracle to get a real random number
+        uint256 winnerTicket = _randomish(lastEnd);
 
         // find the winner
-        winners[raffleId].winner = getTicketOwner(rnd);
+        address winner = getTicketOwner(winnerTicket);
+        winners[raffleId].winner = winner;
+
+        emit RaffleClosed(raffleId, winners[raffleId].prizeAmount, winner, winnerTicket);
 
         raffleId++;
     }
 
     function _assignNumbers(address ticketOwner, uint128 amount) private {
-        uint256 lastStart = raffleStarts[raffleId][
-            raffleStarts[raffleId].length - 1
-        ];
+        uint256 lastStart = raffleStarts[raffleId][raffleStarts[raffleId].length - 1];
         uint256 lastEnd = raffleNumbers[raffleId][lastStart].end;
         uint256 start = lastEnd + 1;
         uint256 end = start + uint256(amount); // for amount we could use gwei so we do not store than many zeros?
@@ -236,24 +239,18 @@ contract RaffleHook is BaseHook {
     }
 
     function _randomish(uint256 max) private view returns (uint256) {
-        return
-            (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) %
-                max) + 1;
+        // Get a random number between 0 and max
+        return (uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % max) + 1;
     }
 
-    function getTicketOwner(
-        uint256 ticketNumber
-    ) public view returns (address) {
+    function getTicketOwner(uint256 ticketNumber) public view returns (address) {
         uint256 low = 0;
         uint256 high = raffleStarts[raffleId].length - 1;
         // binary search
         while (low <= high) {
             uint256 mid = (low + high) / 2;
             uint256 start = raffleStarts[raffleId][mid];
-            if (
-                ticketNumber >= start &&
-                ticketNumber <= raffleNumbers[raffleId][start].end
-            ) {
+            if (ticketNumber >= start && ticketNumber <= raffleNumbers[raffleId][start].end) {
                 return raffleNumbers[raffleId][start].owner;
             } else if (ticketNumber < start) {
                 high = mid - 1;
