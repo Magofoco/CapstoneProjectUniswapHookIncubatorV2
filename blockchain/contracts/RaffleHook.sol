@@ -15,20 +15,16 @@ import {Hooks} from "@uniswap/v4-core/src/libraries/Hooks.sol";
 
 
 /**
-* RaffleHook: takes a percentage
-
-
-RaffleHook: Takes a percentage of the user's swap token0 for a raffle prize.
-The user receives the same number of raffle tickets as the amount of token0 swapped.
-The more the user swaps, the more tickets they receive.
-
-The prize grows with each swap until it reaches the required number of swaps to close the raffle (`swapsPerRaffle`).
-With the final swap, a random winner is chosen, and a new raffle begins.
-
-The winner of each raffle can `withdrawPrize()` at any time.
-
-TODO: Deduct XX% of the prize for the hook owner.
-
+* RaffleHook: Takes a percentage of the user's swap token0 for a raffle prize.
+* The user receives the same number of raffle tickets as the amount of token0 swapped.
+* The more the user swaps, the more tickets they receive.
+* 
+* The prize grows with each swap until it reaches the required number of swaps to close the raffle (`swapsPerRaffle`).
+* With the final swap, a random winner is chosen, and a new raffle begins.
+* 
+* The winner of each raffle can `withdrawPrize()` at any time.
+* 
+* TODO: Deduct XX% of the prize for the hook owner.
 */
 contract RaffleHook is BaseHook {
     using BalanceDeltaLibrary for BalanceDelta;
